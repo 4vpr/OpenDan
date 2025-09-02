@@ -6,10 +6,11 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using OpenDan.Graphics;
+using OpenDan.Scene;
 
 namespace OpenDan;
 
-public sealed class Game : GameWindow
+public sealed partial class Game : GameWindow
 {
     private readonly Settings _settings;
     private readonly double? _fpsCap;
@@ -28,6 +29,9 @@ public sealed class Game : GameWindow
     private readonly System.Diagnostics.Stopwatch _timer = System.Diagnostics.Stopwatch.StartNew();
     private double _nextRenderTime;
     private double RenderInterval => _fpsCap is null or <= 0 ? 0 : 1.0 / Math.Max(1.0, _fpsCap.Value);
+
+    // Simple scene manager
+    private readonly SceneManager _scenes = new();
 
     public Game(Settings settings) : base(
         new GameWindowSettings
@@ -77,79 +81,14 @@ public sealed class Game : GameWindow
 
         // Apply fullscreen preference
         WindowState = _settings.Fullscreen ? WindowState.Fullscreen : WindowState.Normal;
+
+        // Boot to main menu (placeholder)
+        _scenes.Set(new MainMenu());
     }
 
-    protected override void OnUpdateFrame(FrameEventArgs args)
-    {
-        base.OnUpdateFrame(args);
-
-        // Input handling
-        if (KeyboardState.IsKeyDown(Keys.Escape))
-        {
-            Close();
-            return;
-        }
-
-        // Fixed-timestep update loop at 1000 Hz
-        _accumulator += args.Time;
-        int safety = 0;
-        while (_accumulator >= FixedDt && safety < 10)
-        {
-            FixedUpdate(FixedDt);
-            _accumulator -= FixedDt;
-            safety++;
-        }
-    }
-
-    private void FixedUpdate(double dt)
-    {
-        _songTime += dt;
-    }
-
-    protected override void OnRenderFrame(FrameEventArgs args)
-    {
-        base.OnRenderFrame(args);
-        // Throttle rendering to target FPS if capped; otherwise render every frame
-        if (_fpsCap is not null and > 0)
-        {
-            double now = _timer.Elapsed.TotalSeconds;
-            if (now + 0.000_2 < _nextRenderTime) // small safety margin
-            {
-                // Not time to render yet; skip drawing this loop
-                return;
-            }
-            // Catch up in case of drift
-            while (_nextRenderTime <= now)
-            {
-                _nextRenderTime += RenderInterval;
-            }
-        }
-
-        GL.Viewport(0, 0, Size.X, Size.Y);
-        GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
-        if (_shader != null && _quad != null && _texture != null)
-        {
-            _shader.Use();
-
-            // A simple scale over time to visualize something moving
-            var t = (float)(_songTime % 1.0);
-            var scale = 0.5f + 0.25f * MathF.Sin(t * MathF.Tau);
-
-            var model = Matrix4.CreateScale(scale, scale, 1f);
-            var proj = Matrix4.CreateOrthographicOffCenter(0, Size.X, Size.Y, 0, -1, 1);
-            var view = Matrix4.Identity;
-            var mvp = model * view * proj;
-
-            _shader.SetMatrix4("uMvp", mvp);
-            _shader.SetVector4("uTint", new Vector4(1f, 1f, 1f, 1f));
-
-            _texture.Bind(TextureUnit.Texture0);
-            _quad.Draw();
-        }
-
-        SwapBuffers();
-    }
+    // Update and Render loops are split into partial files:
+    // - Game.Update.cs
+    // - Game.Render.cs
 
     protected override void OnUnload()
     {
