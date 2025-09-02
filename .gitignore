@@ -1,0 +1,76 @@
+# --- User-specific files ---
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+
+# --- Build results ---
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
+[Xx]64/
+[Xx]86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+artifacts/
+
+# --- .NET generated ---
+*.dll
+*.exe
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.pdb
+*.cache
+*.mdb
+*.ilk
+*.obj
+*.iobj
+*.ipdb
+*.log
+*.tlog
+*.lastcodeanalysissucceeded
+*.lastbuildstate
+
+# --- NuGet ---
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# --- Testing ---
+TestResults/
+*.trx
+*.coverage*
+BenchmarkDotNet.Artifacts/
+
+# --- IDE / Editor ---
+.vs/
+.idea/
+.Rider/
+.vscode/
+
+# --- Others ---
+*.tmp
+*.temp
+*.bak
+*.orig
+*.swp
+*.swo
+*.log
+.env
+.env.*
+
+# --- OS-specific ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+$RECYCLE.BIN/
+
