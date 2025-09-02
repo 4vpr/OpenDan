@@ -1,3 +1,5 @@
+// 남들보기에 부끄럽지 않은 코드를 쓰자
+
 using OpenTK.Graphics.OpenGL4;
 using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
@@ -101,7 +103,6 @@ public sealed class Game : GameWindow
 
     private void FixedUpdate(double dt)
     {
-        // Example: advance song time; place beatmap + hit detection here
         _songTime += dt;
     }
 

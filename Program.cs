@@ -23,5 +23,6 @@ internal static class Program
 
         using var game = new Game(settings);
         game.Run();
+        
     }
 }

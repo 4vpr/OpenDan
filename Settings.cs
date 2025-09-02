@@ -14,7 +14,8 @@ public sealed class Settings
     public double? MenuFpsCap { get; set; } = 60.0;
 
     public bool Fullscreen { get; set; } = false;
-
+    public string OsuPath { get; set; } = "";
+ 
     public IReadOnlyList<Keys> GetKeysForLanes(int lanes)
     {
         if (KeyLayouts.TryGetValue(lanes, out var list))
